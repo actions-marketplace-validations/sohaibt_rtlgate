@@ -7,7 +7,7 @@ const FSI = "⁨";
 const PDI = "⁩";
 
 // One LTR token: URL, email, {placeholder}/{{placeholder}}, printf %s, or a Latin/digit word.
-const TOKEN = String.raw`(?:https?:\/\/|www\.)[^\s؀-ۿ]+|[\w.+-]+@[\w-]+(?:\.[\w-]+)+|\{\{?[^{}\s]+\}\}?|%[sd@]|[+$€£]?[A-Za-z0-9][A-Za-z0-9$€£@&._\/#+-]*`;
+const TOKEN = String.raw`(?:https?:\/\/|www\.)[^\s؀-ۿ‎‏‪-‮⁦-⁩]+|[\w.+-]+@[\w-]+(?:\.[\w-]+)+|\{\{?[^{}\s]+\}\}?|%[sd@]|[+$€£]?[A-Za-z0-9][A-Za-z0-9$€£@&._\/#+-]*`;
 // A run is tokens joined by spaces: "+966 50 123 4567", "100 SAR", "iPhone 15 Pro".
 const RUN = new RegExp(`(?:${TOKEN})(?:[ \\t]+(?:${TOKEN}))*`, "g");
 // Bidi-neutral punctuation that gets pulled to the wrong side of an LTR run. \x22 and \x27 are quotes.

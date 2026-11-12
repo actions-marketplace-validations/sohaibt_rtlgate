@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "description": "Arabic UI test strings for RTL and bidi checks. MIT licensed. Every value is synthetic; no real people or numbers.",
+  "names": [
+    "محمد عبدالله",
+    "فاطمة الزهراء",
+    "عبدالرحمن بن سعود",
+    "نورة القحطاني",
+    "يوسف الحسيني",
+    "مريم أحمد",
+    "خالد العتيبي",
+    "ليلى عبدالعزيز"
+  ],
+  "phones": [
+    "+966 50 123 4567",
+    "+966 11 234 5678",
+    "0501234567",
+    "+971 50 123 4567",
+    "+971 4 123 4567"
+  ],
+  "prices": [
+    {
+      "text": "125 SAR",
+      "amount": 125,
+      "currency": "SAR"
+    },
+    {
+      "text": "١٢٥ ر.س",
+      "amount": 125,
+      "currency": "SAR"
+    },
+    {
+      "text": "SAR 1,250.00",
+      "amount": 1250,
+      "currency": "SAR"
+    },
+    {
+      "text": "99.99 AED",
+      "amount": 99.99,
+      "currency": "AED"
+    },
+    {
+      "text": "٤٩٫٥٠ د.إ",
+      "amount": 49.5,
+      "currency": "AED"
+    }
+  ],
+  "dates": [
+    {
+      "text": "١٥ رمضان ١٤٤٧ هـ",
+      "calendar": "hijri"
+    },
+    {
+      "text": "1 شوال 1447هـ",
+      "calendar": "hijri"
+    },
+    {
+      "text": "١٤٤٧/٠٩/١٥",
+      "calendar": "hijri"
+    },
+    {
+      "text": "13 نوفمبر 2026",
+      "calendar": "gregorian"
+    },
+    {
+      "text": "٢٠٢٦/١١/١٣",
+      "calendar": "gregorian"
+    },
+    {
+      "text": "2026-11-13",
+      "calendar": "gregorian"
+    }
+  ],
+  "addresses": [
+    "طريق الملك فهد، حي العليا، الرياض 12214",
+    "شارع الشيخ زايد، دبي، الإمارات العربية المتحدة",
+    "مبنى 7، الطابق 3، جدة 23511",
+    "ص.ب 1234، الدمام 31411"
+  ],
+  "urls": [
+    "https://example.sa/ar/checkout",
+    "https://متجر.السعودية",
+    "www.example.ae/ar",
+    "mailto:support@example.sa"
+  ],
+  "codeSwitched": [
+    "اتصل بنا على +966 50 123 4567 لأي استفسار",
+    "المجموع: 1,250.00 SAR شامل الضريبة",
+    "حمّل التطبيق من https://example.sa/app/2 الآن",
+    "راسلنا على support@example.sa",
+    "تم تحديث iPhone 15 Pro إلى iOS 18",
+    "مرحبا {name}، رصيدك {balance}",
+    "سجّل الدخول باستخدام (Google) أو (Apple)",
+    "رقم الطلب: #A-10293"
+  ],
+  "diacritics": [
+    "بِسْمِ اللَّهِ",
+    "مُحَمَّد",
+    "شُكْرًا جَزِيلًا",
+    "السَّلَامُ عَلَيْكُمْ",
+    "مَدْرَسَة"
+  ]
+}
