@@ -12,6 +12,8 @@ test("phones, URLs, emails and prices are flagged unless isolated", () => {
   assert.deepEqual(runs("زر https://example.com/ar/2 للمزيد."), ["https://example.com/ar/2"]);
   assert.deepEqual(runs("راسلنا support@example.sa اليوم"), ["support@example.sa"]);
   assert.deepEqual(runs("السعر 100 SAR شامل الضريبة"), ["100 SAR"]);
+  assert.deepEqual(runs("المجموع: 1,250.00 SAR"), ["1,250.00 SAR"]);
+  assert.deepEqual(runs("المجموع 1,250 ريال"), []);
   assert.deepEqual(runs("اشترِ iPhone 15 Pro الآن"), ["iPhone 15 Pro"]);
 });
 

@@ -63,7 +63,7 @@ YAML locale files take `# rtlgate-ignore`. JSON has no comments, so isolate the 
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: sohaibt/rtlgate@v0.1.0
+- uses: sohaibt/rtlgate@main
   with:
     paths: src locales
     max-issues: 0
