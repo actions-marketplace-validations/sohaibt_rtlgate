@@ -1,5 +1,5 @@
 name: rtlgate
-description: RTL release gate for Arabic web apps. Flags physical CSS, directional Tailwind, missing dir/lang, LTR inputs and un-isolated bidi runs in Arabic locale files.
+description: RTL release gate for Arabic web apps. Flags physical CSS, directional Tailwind, missing dir/lang and un-isolated bidi text.
 branding:
   icon: check-circle
   color: green
