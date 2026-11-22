@@ -6,7 +6,7 @@ import { checkString } from "../src/locale.js";
 const ARABIC = /[؀-ۿ]/;
 const HARAKAT = /[ً-ْ]/;
 
-test("corpus has every category from the PRD", () => {
+test("corpus has every category", () => {
   for (const key of ["names", "phones", "prices", "dates", "addresses", "urls", "codeSwitched", "diacritics"] as const) {
     assert.ok(corpus[key].length >= 3, key);
   }
