@@ -42,3 +42,8 @@ test("rtlgate-ignore comment keeps a deliberate exception", () => {
   const css = "a {\n  /* rtlgate-ignore */\n  margin-left: 0;\n  padding-left: 0; /* rtlgate-ignore */\n}";
   assert.deepEqual(scanCss("a.css", css), []);
 });
+
+test("[dir] and :dir() overrides are not flagged, including nested SCSS", () => {
+  const css = `[dir="rtl"] .icon { margin-right: 8px; }\n.x:dir(rtl) { float: right; }\nhtml[dir=rtl] { .nav { .item { padding-left: 0; } } }\n.y { margin-left: 1px; }`;
+  assert.deepEqual(scanCss("a.scss", css).map((i) => i.line), [4]);
+});

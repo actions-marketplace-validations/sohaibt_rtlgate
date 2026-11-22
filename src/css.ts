@@ -1,3 +1,4 @@
+import type { Declaration, Node, Rule } from "postcss";
 import scss from "postcss-scss";
 import { applyIgnores, type Issue } from "./issue.js";
 
@@ -24,10 +25,19 @@ const VALUES: Record<string, Record<string, string>> = {
   "text-align": { left: "start", right: "end" },
 };
 
+// [dir="rtl"] .x { margin-right: ... } and :dir(rtl) rules are deliberate per-direction overrides.
+function insideDirRule(d: Declaration): boolean {
+  for (let p: Node | undefined = d.parent; p; p = p.parent) {
+    if (p.type === "rule" && /\[dir\b|:dir\(/i.test((p as Rule).selector)) return true;
+  }
+  return false;
+}
+
 /** Scan CSS or SCSS for physical (left/right) properties and values. */
 export function scanCss(file: string, text: string): Issue[] {
   const issues: Issue[] = [];
   scss.parse(text, { from: file }).walkDecls((d) => {
+    if (insideDirRule(d)) return;
     const prop = d.prop.toLowerCase();
     const pos = d.source?.start ?? { line: 1, column: 1 };
     const at = { file, line: pos.line, column: pos.column };

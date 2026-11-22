@@ -42,3 +42,14 @@ test("rtlgate-ignore works in HTML and JSX comments", () => {
   assert.deepEqual(rules('<!-- rtlgate-ignore -->\n<div class="ml-2"></div>'), []);
   assert.deepEqual(rules('{/* rtlgate-ignore */}\n<div className="ml-2" />', "A.tsx"), []);
 });
+
+test("rtl:/ltr: overrides are not flagged", () => {
+  const issues = scanMarkup("a.tsx", `<div className="rtl:mr-4 ltr:ml-4 md:rtl:pl-2">x</div>`);
+  assert.deepEqual(issues, []);
+});
+
+test("class strings inside cn()/clsx()/cva() are scanned with positions", () => {
+  const text = `<div className={cn("w-[calc(100%-1rem)] pl-2", active && 'text-left')}>\n<b className={clsx(\`mr-1\`)} />`;
+  const issues = scanMarkup("a.tsx", text);
+  assert.deepEqual(issues.map((i) => [i.line, i.column, i.suggestion]), [[1, 41, "ps-2"], [1, 59, "text-start"], [2, 21, "me-1"]]);
+});

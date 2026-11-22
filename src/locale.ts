@@ -48,15 +48,21 @@ export function checkString(s: string): BidiFinding[] {
       const finalPunct = /^[.!?]+\s*$/.test(rest);
       if (PUNCT.test(prev) || (PUNCT.test(next) && !finalPunct)) reason = "next to bidi-sensitive punctuation";
     }
-    if (reason) out.push({ run, index: start, reason, suggestion: `\\u2066${run}\\u2069` });
+    // A placeholder's value may be Arabic, so let it pick its own direction (FSI) instead of forcing LTR (LRI).
+    const open = /\{|%[sd@]/.test(run) ? "\\u2068" : "\\u2066";
+    if (reason) out.push({ run, index: start, reason, suggestion: `${open}${run}\\u2069` });
   }
   return out;
 }
 
-/** Arabic locale files: ar.json, ar.yml, ar-SA.json, messages.ar.json, app.ar_EG.yaml ... */
+const AR = String.raw`ar(?:[-_][A-Za-z]{2})?`;
+const AR_FILE = new RegExp(String.raw`^(?:.*\.)?${AR}\.(?:json|ya?ml)$`, "i");
+const AR_DIR = new RegExp(`^${AR}$`, "i");
+/** Arabic locale files: ar.json, ar-SA.json, messages.ar.json, app.ar_EG.yaml, and JSON/YAML in an ar/ folder (locales/ar/common.json). */
 export function isLocaleFile(path: string): boolean {
-  const base = path.split(/[\\/]/).pop() ?? "";
-  return /^(?:.*\.)?ar(?:[-_][A-Za-z]{2})?\.(?:json|ya?ml)$/i.test(base);
+  const parts = path.split(/[\\/]/);
+  const base = parts.pop() ?? "";
+  return AR_FILE.test(base) || (/\.(?:json|ya?ml)$/i.test(base) && AR_DIR.test(parts.pop() ?? ""));
 }
 
 /** Scan a JSON or YAML locale file (JSON is parsed as YAML 1.2 so both get line numbers). */

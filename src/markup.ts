@@ -20,6 +20,8 @@ const EXACT = new Map<string, string>([
 export function logicalUtility(token: string): string | undefined {
   const colon = token.lastIndexOf(":");
   const variant = token.slice(0, colon + 1);
+  // rtl:/ltr: variants are already direction-aware overrides; flipping them again breaks the layout.
+  if (/(?:^|:)(?:rtl|ltr):/.test(variant)) return undefined;
   const [, flags, core] = /^(!?-?)(.*)$/.exec(token.slice(colon + 1))!;
   const out = (s: string) => variant + flags + s;
   const exact = EXACT.get(core);
@@ -35,6 +37,9 @@ export function logicalUtility(token: string): string | undefined {
 // Quote chars are written as \x22 (double), \x27 (single), \x60 (backtick).
 // Static class attributes only: class="..", className="..", className={`..`}. Vue :class bindings are skipped.
 const CLASS_ATTR = /(?<![:\w-])(?:class|className)\s*=\s*(?:\x22([^\x22]*)\x22|\x27([^\x27]*)\x27|\{\s*\x60([^\x60]*)\x60\s*\})/g;
+// Class-merging helpers (shadcn's cn, clsx, classnames, tailwind-merge, cva): their string arguments are class lists.
+const CLASS_CALL = /\b(?:cn|clsx|classnames|classNames|twMerge|twJoin|cva)\(/g;
+const STRING = /\x22([^\x22\n]*)\x22|\x27([^\x27\n]*)\x27|\x60([^\x60]*)\x60/g;
 const HTML_ROOT = /<html\b([^>]*)>/gi;
 // ponytail: [^>]* stops at a JSX arrow (=>); attributes after it are not seen.
 const INPUT = /<input\b[^>]*>/gi;
@@ -58,9 +63,7 @@ export function scanMarkup(file: string, text: string): Issue[] {
     }
   }
 
-  for (const m of text.matchAll(CLASS_ATTR)) {
-    const value = m[1] ?? m[2] ?? m[3] ?? "";
-    const start = m.index! + m[0].indexOf(value, m[0].indexOf("="));
+  const classList = (value: string, start: number) => {
     for (const t of value.matchAll(/\S+/g)) {
       const suggestion = logicalUtility(t[0]);
       if (suggestion) {
@@ -72,6 +75,19 @@ export function scanMarkup(file: string, text: string): Issue[] {
         });
       }
     }
+  };
+
+  for (const m of text.matchAll(CLASS_ATTR)) {
+    const value = m[1] ?? m[2] ?? m[3] ?? "";
+    classList(value, m.index! + m[0].indexOf(value, m[0].indexOf("=")));
+  }
+
+  for (const m of text.matchAll(CLASS_CALL)) {
+    // Arguments run to the matching ")"; parens inside class strings (calc(...)) are balanced too.
+    let i = m.index! + m[0].length;
+    for (let depth = 1; i < text.length && depth > 0; i++) depth += text[i] === "(" ? 1 : text[i] === ")" ? -1 : 0;
+    const args = text.slice(m.index! + m[0].length, i);
+    for (const q of args.matchAll(STRING)) classList(q[1] ?? q[2] ?? q[3] ?? "", m.index! + m[0].length + q.index! + 1);
   }
 
   for (const m of text.matchAll(INPUT)) {

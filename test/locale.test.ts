@@ -67,3 +67,13 @@ test("isLocaleFile matches Arabic locale file names", () => {
   }
   for (const f of ["en.json", "bar.json", "ar.ts", "car.yml"]) assert.ok(!isLocaleFile(f), f);
 });
+
+test("i18next folder layouts (locales/ar/*.json) are locale files", () => {
+  for (const f of ["public/locales/ar/common.json", "locales/ar-SA/translation.yml", "src\\i18n\\ar\\auth.json"]) assert.ok(isLocaleFile(f), f);
+  for (const f of ["locales/en/common.json", "ar/index.ts", "ar.config.json"]) assert.ok(!isLocaleFile(f), f);
+});
+
+test("placeholders get an FSI wrap, since their value may be Arabic", () => {
+  assert.equal(checkString("مرحبا، {{name}}")[0].suggestion, "\\u2068{{name}}\\u2069");
+  assert.equal(checkString("مرحبا، %s")[0].suggestion, "\\u2068%s\\u2069");
+});

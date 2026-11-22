@@ -3,8 +3,8 @@
 A release gate for Arabic and RTL web apps. rtlgate runs locally or in CI and catches the RTL bugs that usually slip through to manual QA:
 
 - **CSS/SCSS**: physical properties (`margin-left`, `padding-right`, `left`, `border-left`, `border-top-left-radius`, `float: left`, `text-align: right` ...) with the logical replacement.
-- **Markup** (HTML, JSX/TSX, Vue): root `<html>` without `dir`/`lang`, directional Tailwind utilities (`ml-4`, `pr-2`, `left-0`, `text-left`, `rounded-l` ...), and `tel`/`email`/`url` inputs without `dir="ltr"`.
-- **Arabic locale files** (`ar.json`, `ar.yml`, `ar-SA.json`, `*.ar.json` ...): LTR runs (phones, prices, URLs, emails, Latin names, `{placeholders}`) that are not wrapped in Unicode isolates and will reorder in RTL, with an LRI/PDI fix.
+- **Markup** (HTML, JSX/TSX, Vue): root `<html>` without `dir`/`lang`, directional Tailwind utilities (`ml-4`, `pr-2`, `left-0`, `text-left`, `rounded-l` ...) in `class`/`className` and in `cn()`, `clsx()`, `twMerge()` and `cva()` calls, and `tel`/`email`/`url` inputs without `dir="ltr"`. `rtl:`/`ltr:` overrides and `[dir="rtl"]`/`:dir(rtl)` CSS rules are left alone.
+- **Arabic locale files** (`ar.json`, `ar-SA.yml`, `*.ar.json`, and JSON/YAML in an `ar/` folder such as `locales/ar/common.json`): LTR runs (phones, prices, URLs, emails, Latin names, `{placeholders}`) that are not wrapped in Unicode isolates and will reorder in RTL. The fix wraps them in LRI/PDI, or FSI/PDI for placeholders, whose value may be Arabic.
 - **Runtime check** (optional): load a page in your installed Chrome with `dir="rtl" lang="ar"` forced, at mobile and desktop widths; flag horizontal overflow and clipped text; save screenshots.
 - **Arabic fixture corpus**: names, phones, SAR/AED prices, Hijri and Gregorian dates, addresses, URLs, code-switched sentences and diacritics, as JSON for your own tests.
 
@@ -13,8 +13,10 @@ Output is text, JSON or SARIF. Nothing is uploaded anywhere.
 ## Install
 
 ```sh
-npm install rtlgate
+npm install --save-dev github:sohaibt/rtlgate
 ```
+
+Not on npm yet; this installs from GitHub and builds on install.
 
 Node 18.3 or newer. For the runtime check, also `npm install playwright-core` (no browser download; rtlgate uses the Chrome you already have).
 
@@ -62,13 +64,13 @@ YAML locale files take `# rtlgate-ignore`. JSON has no comments, so isolate the 
 ### GitHub Action
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v7
 - uses: sohaibt/rtlgate@main
   with:
     paths: src locales
     max-issues: 0
     sarif-file: rtlgate.sarif     # optional
-- uses: github/codeql-action/upload-sarif@v3
+- uses: github/codeql-action/upload-sarif@v4
   if: always()
   with:
     sarif_file: rtlgate.sarif
