@@ -18,7 +18,7 @@ runs:
   steps:
     - name: Build rtlgate
       shell: bash
-      run: cd "$GITHUB_ACTION_PATH" && npm ci --no-audit --no-fund && npm run build
+      run: cd "$GITHUB_ACTION_PATH" && npm ci --no-audit --no-fund
     - name: Run rtlgate
       shell: bash
       env:
